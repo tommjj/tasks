@@ -2,6 +2,8 @@ package repository
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"os"
 	"sync"
 
@@ -24,15 +26,31 @@ func (r *repo) Read() ([]domain.Task, error) {
 	r.m.Lock()
 	defer r.m.Unlock()
 
-	data, err := os.ReadFile(r.file)
+	var tasks []domain.Task
+
+	file, err := os.Open(r.file)
 	if err != nil {
 		return nil, err
 	}
 
-	tasks := []domain.Task{}
-	err = json.Unmarshal(data, &tasks)
+	dec := json.NewDecoder(file)
+
+	_, err = dec.Token()
 	if err != nil {
 		return nil, err
+	}
+
+	for dec.More() {
+		var task domain.Task
+
+		err := dec.Decode(&task)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return tasks, nil
+			}
+			return nil, err
+		}
+		tasks = append(tasks, task)
 	}
 
 	return tasks, nil

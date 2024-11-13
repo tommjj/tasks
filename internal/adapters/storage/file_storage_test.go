@@ -1,4 +1,4 @@
-package repository
+package storage
 
 import (
 	"testing"
@@ -13,12 +13,14 @@ func TestWrite(t *testing.T) {
 	err := r.Sync([]domain.Task{
 		{
 			ID:          1,
+			Status:      domain.StatusDone,
 			Title:       "test 01",
 			Description: "title is my name",
 			CreatedAt:   time.Now(),
 		},
 		{
 			ID:          2,
+			Priority:    domain.Pri4,
 			Title:       "test 02",
 			Description: "title is my name",
 			CreatedAt:   time.Now(),
@@ -32,9 +34,10 @@ func TestWrite(t *testing.T) {
 func TestRead(t *testing.T) {
 	r := New("./data.json")
 
-	data, err := r.Read()
+	tasks := []domain.Task{}
+	err := r.Load(&tasks)
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(data)
+	t.Logf("%+v", tasks)
 }

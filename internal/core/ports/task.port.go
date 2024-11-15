@@ -1,6 +1,10 @@
 package ports
 
-import "github.com/tommjj/tasks/internal/core/domain"
+import (
+	"context"
+
+	"github.com/tommjj/tasks/internal/core/domain"
+)
 
 type ITaskRepository interface {
 	// Read is a func get all task form file
@@ -10,6 +14,6 @@ type ITaskRepository interface {
 }
 
 type IStorage interface {
-	Load(v any) error
-	Sync(v any) error
+	Load(ctx context.Context, v any) error
+	Sync(ctx context.Context, v any) error
 }

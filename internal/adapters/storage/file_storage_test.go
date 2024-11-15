@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 func TestWrite(t *testing.T) {
 	r := New("./data.json")
 
-	err := r.Sync([]domain.Task{
+	err := r.Sync(context.Background(), []domain.Task{
 		{
 			ID:          1,
 			Status:      domain.StatusDone,
@@ -35,7 +36,7 @@ func TestRead(t *testing.T) {
 	r := New("./data.json")
 
 	tasks := []domain.Task{}
-	err := r.Load(&tasks)
+	err := r.Load(context.Background(), &tasks)
 	if err != nil {
 		t.Error(err)
 	}

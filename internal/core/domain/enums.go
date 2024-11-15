@@ -4,7 +4,8 @@ package domain
 type Status int8
 
 const (
-	StatusTodo Status = iota
+	_ Status = iota
+	StatusTodo
 	StatusDone
 	StatusInProgress
 )
@@ -13,7 +14,8 @@ const (
 type Priority int8
 
 const (
-	Pri4 Priority = iota
+	_ Priority = iota
+	Pri4
 	Pri2
 	Pri3
 	Pri1

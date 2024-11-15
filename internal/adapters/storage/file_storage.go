@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"reflect"
@@ -21,9 +22,15 @@ func New(filename string) ports.IStorage {
 	}
 }
 
-func (f *fileStorage) Load(v any) error {
+func (f *fileStorage) Load(ctx context.Context, v any) error {
 	f.lock.RLock()
 	defer f.lock.RUnlock()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
 
 	val := reflect.ValueOf(v)
 	if val.Kind() != reflect.Ptr || val.IsNil() {
@@ -50,9 +57,15 @@ func (f *fileStorage) Load(v any) error {
 	return nil
 }
 
-func (f *fileStorage) Sync(v any) error {
+func (f *fileStorage) Sync(ctx context.Context, v any) error {
 	f.lock.Lock()
 	defer f.lock.Unlock()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
 
 	bytes, err := json.Marshal(v)
 	if err != nil {

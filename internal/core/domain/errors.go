@@ -9,4 +9,5 @@ var (
 	ErrUnsupportedType = errors.New("unsupported type")
 	ErrTypeNotPtr      = errors.New("type must a pointer")
 	ErrNotExist        = os.ErrNotExist
+	ErrNotFound        = errors.New("data not found")
 )

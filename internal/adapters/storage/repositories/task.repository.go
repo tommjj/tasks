@@ -20,7 +20,7 @@ type taskRepository struct {
 	storage ports.IStorage
 }
 
-func NewTaskRepository(storage ports.IStorage) (*taskRepository, error) {
+func NewTaskRepository(storage ports.IStorage) (ports.ITaskRepository, error) {
 	tasks := []domain.Task{}
 
 	err := storage.Load(context.Background(), &tasks)
@@ -91,8 +91,26 @@ func (t *taskRepository) GetTasks() ([]domain.Task, error) {
 	return tasks, nil
 }
 
+func (t *taskRepository) Swap(i, j int) error {
+	leng := len(t.tasks)
+
+	if i == j {
+		return nil
+	}
+
+	if leng <= i || i < 0 {
+		return nil
+	}
+	if leng <= j || j < 0 {
+		return nil
+	}
+
+	t.tasks[i], t.tasks[j] = t.tasks[j], t.tasks[i]
+
+	return t.sync()
+}
+
 // UpdateTask
-// GetTask
 func (t *taskRepository) UpdateTask(task *domain.Task) (*domain.Task, error) {
 	index := slices.IndexFunc(t.tasks,
 		func(v domain.Task) bool {

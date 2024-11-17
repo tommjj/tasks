@@ -6,9 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/tommjj/tasks/internal/adapters/storage"
 	"github.com/tommjj/tasks/internal/core/domain"
+	"github.com/tommjj/tasks/internal/core/ports"
 )
 
-func newTestTaskRepository() (*taskRepository, error) {
+func newTestTaskRepository() (ports.ITaskRepository, error) {
 	storage := storage.New("./data.json")
 
 	return NewTaskRepository(storage)

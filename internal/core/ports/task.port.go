@@ -7,10 +7,12 @@ import (
 )
 
 type ITaskRepository interface {
-	// Read is a func get all task form file
-	Read() ([]domain.Task, error)
-	// Sync is a func overwrite all task to file
-	Sync([]domain.Task) error
+	AddTask(task *domain.Task) (*domain.Task, error)
+	GetTask(id int) (*domain.Task, error)
+	GetTasks() ([]domain.Task, error)
+	Swap(i, j int) error
+	UpdateTask(task *domain.Task) (*domain.Task, error)
+	DelTask(id int) error
 }
 
 type IStorage interface {
